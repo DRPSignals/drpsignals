@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRP Signals — Algorithmic Trading Signals, UK</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b0e;
+    --bg2: #0d1117;
+    --bg3: #131920;
+    --card: #111820;
+    --border: rgba(255,255,255,.07);
+    --border2: rgba(255,255,255,.12);
+    --green: #00e676;
+    --green2: #00c853;
+    --green-dim: rgba(0,230,118,.08);
+    --green-dim2: rgba(0,230,118,.15);
+    --text: #e8eef8;
+    --muted: rgba(232,238,248,.5);
+    --muted2: rgba(232,238,248,.28);
+    --red: #ff5252;
+    --amber: #ffab40;
+    --blue: #448aff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(8,11,14,.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .15s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--green); color: #000; font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700; padding: .5rem 1.2rem; border-radius: 4px;
+    text-decoration: none; letter-spacing: .05em; transition: all .15s;
+  }
+  .nav-cta:hover { background: var(--green2); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: .3;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-glow {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,230,118,.07) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 1100px; margin: 0 auto; width: 100%; position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr .9fr; gap: 4rem; align-items: center; }
+  .hero-left {}
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-dim); border: 1px solid rgba(0,230,118,.2);
+    color: var(--green); font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    padding: .4rem 1rem; border-radius: 3px; margin-bottom: 1.5rem;
+  }
+  .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+  .hero h1 {
+    font-family: 'Clash Display', 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 700; line-height: 1.05;
+    margin-bottom: 1.25rem;
+    letter-spacing: -.02em;
+  }
+  .hero h1 .hl { color: var(--green); }
+  .hero-sub { font-size: 17px; color: var(--muted); max-width: 440px; margin-bottom: 2rem; line-height: 1.7; font-weight: 300; }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green); color: #000;
+    font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700;
+    padding: .85rem 2rem; border-radius: 4px; text-decoration: none;
+    letter-spacing: .05em; transition: all .2s; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--green2); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border2);
+    font-size: 14px; padding: .85rem 1.75rem; border-radius: 4px;
+    text-decoration: none; transition: all .2s; display: inline-block;
+  }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.25); }
+  .hero-trust { display: flex; gap: 1.5rem; margin-top: 2.5rem; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted2); }
+  .trust-icon { color: var(--green); font-size: 14px; }
+
+  /* Live signal card */
+  .live-card {
+    background: var(--card); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 1.25rem 1.5rem;
+    font-family: 'Space Mono', monospace;
+  }
+  .live-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: .75rem; border-bottom: 1px solid var(--border); }
+  .live-label { font-size: 10px; color: var(--green); letter-spacing: .1em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1s infinite; }
+  .live-time { font-size: 10px; color: var(--muted2); }
+  .signal-ticker { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
+  .signal-strategy { font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: .85rem; }
+  .signal-rows { display: flex; flex-direction: column; gap: .45rem; }
+  .srow { display: flex; justify-content: space-between; font-size: 12px; padding: .3rem 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .srow-label { color: var(--muted2); }
+  .srow-val { color: var(--text); }
+  .srow-val.g { color: var(--green); }
+  .srow-val.r { color: var(--red); }
+  .srow-val.a { color: var(--amber); }
+  .signal-roc { margin-top: .85rem; background: var(--green-dim); border-radius: 6px; padding: .65rem .85rem; display: flex; justify-content: space-between; align-items: center; }
+  .roc-label { font-size: 10px; color: var(--green); letter-spacing: .06em; }
+  .roc-val { font-size: 20px; font-weight: 700; color: var(--green); }
+  .disclaimer-card { font-size: 10px; color: var(--muted2); text-align: center; margin-top: .85rem; line-height: 1.5; }
+
+  /* SECTION common */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--green); margin-bottom: 1rem; }
+  .section-h { font-family: 'Clash Display', 'Space Grotesk', sans-serif; font-size: clamp(26px, 4vw, 38px); font-weight: 700; line-height: 1.15; margin-bottom: 1rem; letter-spacing: -.01em; }
+  .section-sub { font-size: 16px; color: var(--muted); max-width: 500px; line-height: 1.7; font-weight: 300; }
+
+  /* HOW IT WORKS */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .step-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  .step-num { font-family: 'Space Mono', monospace; font-size: 36px; font-weight: 700; color: var(--green-dim2); margin-bottom: .75rem; line-height: 1; }
+  .step-title { font-size: 16px; font-weight: 500; margin-bottom: .5rem; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+  .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; position: relative; }
+  .price-card.featured { border-color: var(--green); }
+  .featured-tag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--green); color: #000; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 12px; border-radius: 3px; letter-spacing: .06em; white-space: nowrap; }
+  .price-tier { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+  .price-amount { font-family: 'Clash Display', 'Space Grotesk', sans-serif; font-size: 40px; font-weight: 700; color: var(--text); margin-bottom: .15rem; }
+  .price-amount span { font-size: 16px; color: var(--muted); font-weight: 400; font-family: 'Space Grotesk', sans-serif; }
+  .price-desc { font-size: 13px; color: var(--muted); margin-bottom: 1.25rem; }
+  .price-features { list-style: none; margin-bottom: 1.5rem; }
+  .price-features li { font-size: 13px; color: var(--muted); padding: .4rem 0; display: flex; align-items: flex-start; gap: 9px; border-bottom: 1px solid var(--border); }
+  .price-features li:last-child { border-bottom: none; }
+  .price-features li .check { color: var(--green); flex-shrink: 0; margin-top: 1px; }
+  .price-btn {
+    display: block; width: 100%; text-align: center;
+    padding: .75rem; border-radius: 5px; font-size: 13px;
+    font-family: 'Space Mono', monospace; font-weight: 700;
+    text-decoration: none; letter-spacing: .04em; transition: all .15s;
+  }
+  .price-btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+  .price-btn-ghost:hover { border-color: var(--green); color: var(--green); }
+  .price-btn-green { background: var(--green); color: #000; border: none; }
+  .price-btn-green:hover { background: var(--green2); }
+
+  /* PROOF / STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem; text-align: center; }
+  .stat-card { }
+  .stat-num { font-family: 'Clash Display', 'Space Grotesk', sans-serif; font-size: 38px; font-weight: 700; color: var(--green); margin-bottom: .25rem; }
+  .stat-label { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: .05em; }
+
+  /* DISCLAIMER */
+  .disclaimer-bar {
+    background: rgba(255,82,82,.06); border-top: 1px solid rgba(255,82,82,.15);
+    padding: 1.25rem 2rem; text-align: center;
+    font-size: 11px; color: rgba(255,82,82,.6); line-height: 1.7;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding: 2rem; text-align: center;
+    font-size: 12px; color: var(--muted2);
+    font-family: 'Space Mono', monospace;
+  }
+  footer a { color: var(--muted); text-decoration: none; margin: 0 1rem; }
+  footer a:hover { color: var(--green); }
+
+  @media(max-width:768px){
+    .hero-inner{grid-template-columns:1fr;}
+    .live-card{display:none;}
+    .steps,.pricing-grid,.stats-row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><div class="nav-logo-dot"></div>DRP Signals</div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#proof">Track record</a>
+    <a href="https://t.me/DRPSignals" class="nav-cta">Join Telegram →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
+    <svg width="100%" height="100%" viewBox="0 0 1280 640" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect width="1280" height="640" fill="#080b0e"/>
+      <g stroke="rgba(255,255,255,0.035)" stroke-width="1">
+        <line x1="0" y1="64" x2="1280" y2="64"/><line x1="0" y1="128" x2="1280" y2="128"/><line x1="0" y1="192" x2="1280" y2="192"/><line x1="0" y1="256" x2="1280" y2="256"/><line x1="0" y1="320" x2="1280" y2="320"/><line x1="0" y1="384" x2="1280" y2="384"/><line x1="0" y1="448" x2="1280" y2="448"/><line x1="0" y1="512" x2="1280" y2="512"/><line x1="0" y1="576" x2="1280" y2="576"/>
+        <line x1="128" y1="0" x2="128" y2="640"/><line x1="256" y1="0" x2="256" y2="640"/><line x1="384" y1="0" x2="384" y2="640"/><line x1="512" y1="0" x2="512" y2="640"/><line x1="640" y1="0" x2="640" y2="640"/><line x1="768" y1="0" x2="768" y2="640"/><line x1="896" y1="0" x2="896" y2="640"/><line x1="1024" y1="0" x2="1024" y2="640"/><line x1="1152" y1="0" x2="1152" y2="640"/>
+      </g>
+      <g opacity="0.22">
+        <rect x="700" y="480" width="22" height="80" rx="2" fill="#00e676"/><line x1="711" y1="465" x2="711" y2="575" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="740" y="450" width="22" height="90" rx="2" fill="#00e676"/><line x1="751" y1="430" x2="751" y2="555" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="780" y="420" width="22" height="75" rx="2" fill="#00e676"/><line x1="791" y1="405" x2="791" y2="510" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="820" y="400" width="22" height="65" rx="2" fill="#ff5252"/><line x1="831" y1="388" x2="831" y2="480" stroke="#ff5252" stroke-width="2.5"/>
+        <rect x="860" y="395" width="22" height="55" rx="2" fill="#ff5252"/>
+        <rect x="900" y="360" width="22" height="80" rx="2" fill="#00e676"/><line x1="911" y1="345" x2="911" y2="455" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="940" y="320" width="22" height="95" rx="2" fill="#00e676"/><line x1="951" y1="300" x2="951" y2="430" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="980" y="290" width="22" height="80" rx="2" fill="#00e676"/><line x1="991" y1="272" x2="991" y2="385" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="1020" y="270" width="22" height="70" rx="2" fill="#00e676"/>
+        <rect x="1060" y="240" width="22" height="90" rx="2" fill="#ff5252"/><line x1="1071" y1="225" x2="1071" y2="345" stroke="#ff5252" stroke-width="2.5"/>
+        <rect x="1100" y="260" width="22" height="80" rx="2" fill="#ff5252"/><line x1="1111" y1="245" x2="1111" y2="355" stroke="#ff5252" stroke-width="2.5"/>
+        <rect x="1140" y="300" width="22" height="70" rx="2" fill="#ff5252"/><line x1="1151" y1="288" x2="1151" y2="385" stroke="#ff5252" stroke-width="2.5"/>
+        <rect x="1180" y="330" width="22" height="55" rx="2" fill="#00e676"/><line x1="1191" y1="318" x2="1191" y2="400" stroke="#00e676" stroke-width="2.5"/>
+        <rect x="1220" y="350" width="22" height="60" rx="2" fill="#00e676"/>
+      </g>
+      <line x1="700" y1="570" x2="1280" y2="310" stroke="#00e676" stroke-width="1.5" opacity="0.25" stroke-dasharray="10,7"/>
+      <line x1="700" y1="370" x2="1280" y2="370" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+      <line x1="700" y1="430" x2="1280" y2="430" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <defs>
+        <linearGradient id="hfade" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#080b0e" stop-opacity="1"/>
+          <stop offset="55%" stop-color="#080b0e" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#080b0e" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="vfade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="70%" stop-color="#080b0e" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#080b0e" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+      <rect width="1280" height="640" fill="url(#hfade)"/>
+      <rect width="1280" height="640" fill="url(#vfade)"/>
+      <ellipse cx="300" cy="320" rx="320" ry="220" fill="rgba(0,230,118,0.04)"/>
+    </svg>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge"><div class="hero-badge-dot"></div>Live signals — UK algo trader</div>
+      <h1>Python bots.<br>Real signals.<br><span class="hl">Your edge.</span></h1>
+      <p class="hero-sub">I run live algorithmic bots that scan US equities every morning. The signals my bots generate — Wheel strategy, Stocks In Play, Politician trades — delivered directly to your Telegram.</p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-primary">See pricing</a>
+        <a href="#how" class="btn-ghost">How it works</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item"><span class="trust-icon">✓</span> Signals from live Python bots</div>
+        <div class="trust-item"><span class="trust-icon">✓</span> UK-based trader, real account</div>
+        <div class="trust-item"><span class="trust-icon">✓</span> Cancel anytime</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="live-card">
+        <div class="live-card-header">
+          <div class="live-label"><div class="live-dot"></div>Live signal</div>
+          <div class="live-time">Today · 08:04 GMT</div>
+        </div>
+        <div class="signal-ticker">AMD</div>
+        <div class="signal-strategy">Wheel Strategy · Cash-Secured Put</div>
+        <div class="signal-rows">
+          <div class="srow"><span class="srow-label">Action</span><span class="srow-val">Sell to Open $215 Put</span></div>
+          <div class="srow"><span class="srow-label">Expiry</span><span class="srow-val">22 May 2026 (43 DTE)</span></div>
+          <div class="srow"><span class="srow-label">Premium</span><span class="srow-val g">~$1,052 / contract</span></div>
+          <div class="srow"><span class="srow-label">IV Rank</span><span class="srow-val a">57% (elevated)</span></div>
+          <div class="srow"><span class="srow-label">Delta</span><span class="srow-val">0.32</span></div>
+          <div class="srow"><span class="srow-label">Ann. ROC</span><span class="srow-val g">41.5%</span></div>
+        </div>
+        <div class="signal-roc">
+          <div class="roc-label">ROC this trade</div>
+          <div class="roc-val">4.89%</div>
+        </div>
+        <div class="disclaimer-card">⚠ Not financial advice · Educational only · Do your own research</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">// How it works</div>
+    <h2 class="section-h">Automation you can trade with</h2>
+    <p class="section-sub">Every weekday morning, my bots run automatically. Here's what happens before most people have finished their coffee.</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-title">Bots scan at 08:00 GMT</div>
+        <div class="step-desc">Three Python scripts run automatically — Wheel strategy scanner, Stocks In Play scanner, and Politician trade tracker. All connected to live market data.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-title">Signals ranked and filtered</div>
+        <div class="step-desc">Results are filtered by ROC, IV rank, delta, and liquidity. Only the highest-quality setups make it through. Typically 3–8 signals per day.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-title">Delivered to your Telegram</div>
+        <div class="step-desc">Each signal includes the ticker, strategy, entry level, stop loss, take profit, and the bot's full reasoning. Ready to review over your morning coffee.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="proof">
+  <div class="container">
+    <div class="section-label">// Track record (Alpaca paper trading)</div>
+    <h2 class="section-h">Numbers from the bots</h2>
+    <p class="section-sub">All figures from Alpaca paper trading account. Simulated results, not live trading performance.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Active bots running</div></div>
+      <div class="stat-card"><div class="stat-num">08:00</div><div class="stat-label">GMT — daily scan time</div></div>
+      <div class="stat-card"><div class="stat-num">41%</div><div class="stat-label">Best ann. ROC (paper)</div></div>
+      <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">Tickers scanned daily</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">// Pricing</div>
+    <h2 class="section-h">Simple, transparent tiers</h2>
+    <p class="section-sub">Start free. Upgrade when you see the value. Cancel any time — no contracts, no lock-in.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Free</div>
+        <div class="price-amount">£0 <span>/month</span></div>
+        <p class="price-desc">Get a feel for the signal quality</p>
+        <ul class="price-features">
+          <li><span class="check">✓</span> 2 sample signals per week</li>
+          <li><span class="check">✓</span> Weekly market commentary</li>
+          <li><span class="check">✓</span> Bot performance snapshots</li>
+        </ul>
+        <a href="https://t.me/DRPSignals" class="price-btn price-btn-ghost">Join free channel →</a>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-tag">MOST POPULAR</div>
+        <div class="price-tier">Starter</div>
+        <div class="price-amount">£15 <span>/month</span></div>
+        <p class="price-desc">Daily signals, fully explained</p>
+        <ul class="price-features">
+          <li><span class="check">✓</span> All daily Wheel Strategy signals</li>
+          <li><span class="check">✓</span> All Stocks In Play alerts</li>
+          <li><span class="check">✓</span> Entry · Stop Loss · Take Profit</li>
+          <li><span class="check">✓</span> Signal reasoning in plain English</li>
+          <li><span class="check">✓</span> Private Telegram group access</li>
+        </ul>
+        <a href="https://payhip.com/YOURPRODUCT" class="price-btn price-btn-green">Subscribe — £15/mo →</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Pro</div>
+        <div class="price-amount">£35 <span>/month</span></div>
+        <p class="price-desc">Everything, plus direct access</p>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Everything in Starter</li>
+          <li><span class="check">✓</span> Politician trades tracker (weekly)</li>
+          <li><span class="check">✓</span> Live bot performance log</li>
+          <li><span class="check">✓</span> Direct Q&amp;A with me</li>
+          <li><span class="check">✓</span> Early access to new bot features</li>
+        </ul>
+        <a href="https://payhip.com/YOURPRODUCTPRO" class="price-btn price-btn-ghost">Subscribe — £35/mo →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER BAR -->
+<div class="disclaimer-bar">
+  ⚠ RISK DISCLAIMER — These signals are for educational and informational purposes only. They do not constitute financial advice. Trading financial instruments involves substantial risk of loss. Past performance, including paper trading results, is not indicative of future results. Always conduct your own research before placing any trade.
+</div>
+
+<footer>
+  <div style="margin-bottom:.75rem;">
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://t.me/DRPSignals">Telegram</a>
+    <a href="mailto:princeprinces@msn.com">Contact</a>
+  </div>
+  <div>© 2026 DRP Signals · UK · Not FCA regulated · Educational content only</div>
+</footer>
+
+</body>
+</html>
